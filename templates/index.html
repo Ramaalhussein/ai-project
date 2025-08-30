@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI ASSISTANT</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #4285f4;
+            --dark-blue: #0d47a1;
+            --light-blue: #e8f0fe;
+            --white: #ffffff;
+            --gray: #f5f5f5;
+            --dark-gray: #757575;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+
+        body {
+            background-image: url('https://img.pikbest.com/wp/202344/light-blue-gradient-background-texture-of-a-with-marker-like-detail_9933056.jpg!sw800');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--white);
+            background-size: cover;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--white), #64b5f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px 25px;
+            font-size: 1.2rem;
+            margin: 20px auto;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--dark-gray);
+            margin-top: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 5px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+            color: white;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            margin-top: 10px;
+            resize: none;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: #333;
+            min-height: 100px;
+            display: none;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .voice-visualizer {
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualizer-bar {
+            width: 4px;
+            height: 20px;
+            background-color: var(--white);
+            margin: 0 2px;
+            border-radius: 2px;
+            animation: equalize 1.5s infinite ease-in-out;
+            animation-delay: calc(var(--i) * 0.1s);
+            opacity: 0.7;
+        }
+
+        .status {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status.loading {
+            color: var(--primary-color);
+        }
+
+        .status.error {
+            color: var(--error-color);
+        }
+
+        .status.success {
+            color: var(--success-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @keyframes equalize {
+            0%, 100% { height: 10px; }
+            50% { height: 30px; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tab {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI ASSISTANT</h1>
+            <p class="subtitle">graduation proj</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('voice')">الوضع الصوتي</div>
+            <div class="tab" onclick="openTab('text')">الوضع النصي</div>
+        </div>
+
+        <div id="voice" class="tab-content active">
+            <div class="card voice-card">
+                <h2>التفاعل الصوتي</h2>
+                <p>اضغط على الزر ثم تكلم وسيقوم المساعد بالرد عليك</p>
+                <div class="voice-visualizer" id="visualizer">
+                    <div class="visualizer-bar" style="--i: 0"></div>
+                    <div class="visualizer-bar" style="--i: 1"></div>
+                    <div class="visualizer-bar" style="--i: 2"></div>
+                    <div class="visualizer-bar" style="--i: 3"></div>
+                    <div class="visualizer-bar" style="--i: 4"></div>
+                    <div class="visualizer-bar" style="--i: 5"></div>
+                    <div class="visualizer-bar" style="--i: 6"></div>
+                    <div class="visualizer-bar" style="--i: 7"></div>
+                </div>
+                
+                <button class="btn" id="recordBtn">بدء التسجيل</button>
+                <p class="status" id="voiceStatus">جاهز للاستماع</p>
+                
+                <div class="result-container" id="voiceResult">
+                    <div class="result-title">النتيجة:</div>
+                    <div id="voiceOutput"></div>
+                </div>
+                
+                <button class="btn btn-secondary" id="playBtn" style="display: none;">تشغيل الرد الصوتي</button>
+                <audio id="audioPlayer" autoplay style="display:none;"></audio>
+            </div>
+        </div>
+
+        <div id="text" class="tab-content">
+            <div class="card text-card">
+                <h2>التفاعل النصي</h2>
+                <p>اكتب سؤالك في المربع أدناه وسيقوم المساعد بالرد عليك</p>
+                
+                <div class="input-group">
+                    <textarea id="questionInput" rows="4" placeholder="اكتب سؤالك هنا..."></textarea>
+                </div>
+                
+                <button class="btn" id="submitBtn">إرسال السؤال</button>
+                <p class="status" id="textStatus">اكتب سؤالك واضغط إرسال</p>
+                
+                <div class="result-container" id="textResult">
+                    <div class="result-title">الإجابة:</div>
+                    <div id="textOutput"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>By Rama AL Hussein</p>
+        </footer>
+    </div>
+
+    <script>
+        // تبديل بين التبويبات
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // التعرف على الصوت
+        let recognition;
+        let isRecording = false;
+        const recordBtn = document.getElementById('recordBtn');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const visualizer = document.getElementById('visualizer');
+        const voiceOutput = document.getElementById('voiceOutput');
+        const voiceResult = document.getElementById('voiceResult');
+        const playBtn = document.getElementById('playBtn');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        // تهيئة التعرف على الصوت
+        function initSpeechRecognition() {
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!window.SpeechRecognition) {
+                voiceStatus.textContent = "المتصفح لا يدعم التعرف على الصوت";
+                recordBtn.disabled = true;
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ar-SA';
+            recognition.interimResults = false;
+            recognition.continuous = false;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                recordBtn.textContent = "إيقاف التسجيل";
+                voiceStatus.textContent = "جاري الاستماع... تكلم الآن";
+                voiceStatus.className = "status loading";
+                visualizer.style.backgroundColor = "rgba(255, 255, 255, 0.4)";
+            };
+
+            recognition.onend = () => {
+                if (isRecording) {
+                    recognition.start(); // إعادة التشغيل التلقائي
+                } else {
+                    voiceStatus.textContent = "جاهز للاستماع";
+                    voiceStatus.className = "status";
+                    visualizer.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+                }
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                processVoiceInput(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                voiceStatus.textContent = "حدث خطأ: " + event.error;
+                voiceStatus.className = "status error";
+                isRecording = false;
+                recordBtn.textContent = "بدء التسجيل";
+            };
+        }
+
+        // معالجة الإدخال الصوتي
+        async function processVoiceInput(voiceText) {
+            if (!voiceText) {
+                voiceStatus.textContent = "لم يتم التعرف على نص صوتي";
+                voiceStatus.className = "status error";
+                return;
+            }
+
+            try {
+                voiceStatus.textContent = "جاري معالجة الطلب...";
+                voiceStatus.className = "status loading";
+                
+                const response = await fetch('/api/voice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ voiceText })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`خطأ في الخادم: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                voiceOutput.textContent = data.answer;
+                audioPlayer.src = "/speak/" + encodeURIComponent(data.answer);
+                voiceResult.style.display = "block";
+                
+                if (data.audio_url) {
+                    audioPlayer.src = data.audio_url;
+                    audioPlayer.style.display = "block"; // عرض مشغل الصوت
+                    playBtn.style.display = "inline-block"; // عرض زر التشغيل
+                }
+
+                voiceStatus.textContent = "تم استقبال الرد بنجاح";
+                voiceStatus.className = "status success";
+            } catch (error) {
+                console.error("Error:", error);
+                voiceOutput.textContent = "حدث خطأ أثناء معالجة الطلب";
+                voiceStatus.textContent = "حدث خطأ: " + error.message;
+                voiceStatus.className = "status error";
+            } finally {
+                isRecording = false;
+                recordBtn.textContent = "بدء التسجيل";
+            }
+        }
+
+        // إرسال السؤال النصي
+        document.getElementById('submitBtn').addEventListener('click', async function() {
+            const question = document.getElementById('questionInput').value.trim();
+            const textStatus = document.getElementById('textStatus');
+            const textResult = document.getElementById('textResult');
+            const textOutput = document.getElementById('textOutput');
+
+            if (!question) {
+                textStatus.textContent = "الرجاء إدخال سؤال أولاً";
+                textStatus.className = "status error";
+                return;
+            }
+
+            textStatus.textContent = "جاري معالجة السؤال...";
+            textStatus.className = "status loading";
+
+            try {
+                // هنا يمكنك إضافة الاتصال بالخادم الخاص بك
+                // هذا مثال فقط:
+                const response = await fetch('/api/text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`خطأ في الخادم: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                textOutput.textContent = data.answer;
+                textResult.style.display = "block";
+                textStatus.textContent = "تمت معالجة السؤال بنجاح";
+                textStatus.className = "status success";
+            } catch (error) {
+                console.error("Error:", error);
+                textOutput.textContent = "حدث خطأ أثناء معالجة السؤال";
+                textStatus.textContent = "حدث خطأ: " + error.message;
+                textStatus.className = "status error";
+            }
+        });
+
+        // تشغيل الصوت
+        playBtn.addEventListener('click', function () {
+    if (audioPlayer.src) {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playBtn.textContent = "إيقاف التشغيل";
+        } else {
+            audioPlayer.pause();
+            playBtn.textContent = "تشغيل الرد الصوتي";
+        }
+
+        audioPlayer.onended = () => {
+            playBtn.textContent = "تشغيل الرد الصوتي";
+        };
+    }
+});
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            initSpeechRecognition();
+            
+            recordBtn.addEventListener('click', function() {
+                if (isRecording) {
+                    recognition.stop();
+                    isRecording = false;
+                    recordBtn.textContent = "بدء التسجيل";
+                } else {
+                    recognition.start();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
