@@ -108,4 +108,4 @@ if __name__ == "__main__":
         print(f"\n❌ خطأ: {e}")
         print("يرجى التأكد من وجود ملف data.csv في نفس مجلد البرنامج.")
     except Exception as e:
-        print(f"\n⚠️ حدث خطأ غير متوقع: {e}")
+        print (f"\n[!] حدث خطأ غير متوقع: {e}")
