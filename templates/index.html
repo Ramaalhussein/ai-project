@@ -261,6 +261,7 @@
             <div class="card voice-card">
                 <h2>التفاعل الصوتي</h2>
                 <p>اضغط على الزر ثم تكلم وسيقوم المساعد بالرد عليك</p>
+               
                 <div class="voice-visualizer" id="visualizer">
                     <div class="visualizer-bar" style="--i: 0"></div>
                     <div class="visualizer-bar" style="--i: 1"></div>
@@ -280,6 +281,7 @@
                     <div id="voiceOutput"></div>
                 </div>
                 <button id="textPlayBtn">تشغيل الصوت</button>
+
                 <button class="btn btn-secondary" id="playBtn" style="display: none;">تشغيل الرد الصوتي</button>
                 <audio id="audioPlayer" style="display:none;"></audio>
             </div>
@@ -400,8 +402,11 @@
                     audio_url: ""
                 };
                 
+// بعد هذا السطر: 
                 voiceOutput.textContent = mockResponse.answer;
-                voiceResult.style.display = "block";
+
+// أضف هذا:
+                speechSynthesis.speak(new SpeechSynthesisUtterance(mockResponse.answer));                voiceResult.style.display = "block";
                 
                 voiceStatus.textContent = "تم استقبال الرد بنجاح";
                 voiceStatus.className = "status success";
