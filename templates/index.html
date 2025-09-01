@@ -279,9 +279,9 @@
                     <div class="result-title">النتيجة:</div>
                     <div id="voiceOutput"></div>
                 </div>
-                
+                <button id="textPlayBtn">تشغيل الصوت</button>
                 <button class="btn btn-secondary" id="playBtn" style="display: none;">تشغيل الرد الصوتي</button>
-                <audio id="audioPlayer" autoplay style="display:none;"></audio>
+                <audio id="audioPlayer" style="display:none;"></audio>
             </div>
         </div>
 
@@ -391,28 +391,18 @@
                 voiceStatus.textContent = "جاري معالجة الطلب...";
                 voiceStatus.className = "status loading";
                 
-                const response = await fetch('/api/voice', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ voiceText })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`خطأ في الخادم: ${response.status}`);
-                }
-
-                const data = await response.json();
+                // هذه مجرد محاكاة للاستجابة - يجب استبدالها بالاتصال الفعلي بالخادم
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                voiceOutput.textContent = data.answer;
-                audioPlayer.src = "/speak/" + encodeURIComponent(data.answer);
+                // محاكاة للرد من الخادم
+                const mockResponse = {
+                    answer: "هذا رد تجريبي من المساعد. لقد سمعت: " + voiceText,
+                    audio_url: ""
+                };
+                
+                voiceOutput.textContent = mockResponse.answer;
                 voiceResult.style.display = "block";
                 
-                if (data.audio_url) {
-                    audioPlayer.src = data.audio_url;
-                    audioPlayer.style.display = "block"; // عرض مشغل الصوت
-                    playBtn.style.display = "inline-block"; // عرض زر التشغيل
-                }
-
                 voiceStatus.textContent = "تم استقبال الرد بنجاح";
                 voiceStatus.className = "status success";
             } catch (error) {
@@ -443,21 +433,15 @@
             textStatus.className = "status loading";
 
             try {
-                // هنا يمكنك إضافة الاتصال بالخادم الخاص بك
-                // هذا مثال فقط:
-                const response = await fetch('/api/text', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`خطأ في الخادم: ${response.status}`);
-                }
-
-                const data = await response.json();
+                // محاكاة للاتصال بالخادم
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                textOutput.textContent = data.answer;
+                // محاكاة للرد من الخادم
+                const mockResponse = {
+                    answer: "هذا رد تجريبي على سؤالك: '" + question + "'. يجب توصيل هذا التطبيق بخادم حقيقي ليعمل بشكل صحيح."
+                };
+                
+                textOutput.textContent = mockResponse.answer;
                 textResult.style.display = "block";
                 textStatus.textContent = "تمت معالجة السؤال بنجاح";
                 textStatus.className = "status success";
@@ -470,21 +454,21 @@
         });
 
         // تشغيل الصوت
-        playBtn.addEventListener('click', function () {
-    if (audioPlayer.src) {
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-            playBtn.textContent = "إيقاف التشغيل";
-        } else {
-            audioPlayer.pause();
-            playBtn.textContent = "تشغيل الرد الصوتي";
-        }
+        playBtn.addEventListener('click', function() {
+            if (audioPlayer.src) {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    playBtn.textContent = "إيقاف التشغيل";
+                } else {
+                    audioPlayer.pause();
+                    playBtn.textContent = "تشغيل الرد الصوتي";
+                }
 
-        audioPlayer.onended = () => {
-            playBtn.textContent = "تشغيل الرد الصوتي";
-        };
-    }
-});
+                audioPlayer.onended = function() {
+                    playBtn.textContent = "تشغيل الرد الصوتي";
+                };
+            }
+        });
 
         // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', function() {
