@@ -56,7 +56,16 @@ def voice_api():
         response["audio_url"] = f"/audio/{audio_file}"
 
     return jsonify(response)
-@app.route('/api/text', methods=['POST'])
+
+@app.route('/ask', methods=['POST'])
+def ask():
+    data = request.get_json()
+    question = data['question']
+    answer = get_answer(question, df, vectorizer, tfidf_matrix)
+    return jsonify({'answer': answer})
+
+
+
 @app.route('/api/text', methods=['POST'])
 def text_api():
     data = request.get_json()
